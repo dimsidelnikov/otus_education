@@ -47,7 +47,7 @@ def create_books_list(directory, file):
         {
             'title': book['Title'],
             'author': book['Author'],
-            'pages': book['Pages'],
+            'pages': int(book['Pages']),
             'genre': book['Genre']
         }
         for book in input_list
