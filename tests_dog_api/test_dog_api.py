@@ -16,20 +16,17 @@ def test_single_random_image(base_url):
     assert response.json().get('status') == 'success'
 
 
-@pytest.mark.parametrize('num_images', [1, 10, 50, 51], ids=['one image',
-                                                             '10 images',
-                                                             'max value images 50',
-                                                             'over the max'])
-def test_multiple_random_images(base_url, num_images):
-    max_num_images = 50
+@pytest.mark.parametrize('num_images, expected_num', [(1, 1),
+                                                      (10, 10),
+                                                      (50, 50),
+                                                      (51, 50)],
+                         ids=['one image', '10 images', 'max value images 50', 'over the max'])
+def test_multiple_random_images(base_url, num_images, expected_num):
     response = requests.get(base_url + f'/breeds/image/random/{num_images}')
     assert response.status_code == 200
     assert type(response.json().get('message')) == list
     assert response.json().get('status') == 'success'
-    if num_images <= max_num_images:
-        assert len(response.json().get('message')) == num_images
-    else:
-        assert len(response.json().get('message')) == max_num_images
+    assert len(response.json().get('message')) == expected_num
 
 
 @pytest.mark.parametrize('breed', ['borzoi', 'husky', 'mastiff'])
