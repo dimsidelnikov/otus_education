@@ -1,5 +1,6 @@
 import subprocess
 import datetime
+from collections import defaultdict
 
 
 def print_process_info(info):
@@ -19,8 +20,7 @@ output = subprocess.run(['ps', 'aux'], capture_output=True)
 lines = output.stdout.decode().splitlines()
 
 num_process = (len(lines)-1)
-users = []
-num_users_process = {}
+num_users_process = defaultdict(int)
 vsz = 0
 cpu = 0
 max_vsz = 0
@@ -30,11 +30,7 @@ process_max_cpu = ''
 
 for i in range(1, len(lines)):
     parts = lines[i].split()
-    if parts[0] not in users:
-        users.append(parts[0])
-        num_users_process[parts[0]] = 1
-    else:
-        num_users_process[parts[0]] += 1
+    num_users_process[parts[0]] += 1
     vsz += int(parts[4])
     cpu += float(parts[2])
     if max_vsz < int(parts[4]):
@@ -43,7 +39,7 @@ for i in range(1, len(lines)):
         process_max_cpu = parts[10]
 
 print_process_info('Отчёт о состоянии системы:')
-print_process_info(f'Пользователи системы: {", ".join(users)}')
+print_process_info(f'Пользователи системы: {", ".join(num_users_process.keys())}')
 print_process_info(f'Процессов запущено: {num_process}')
 print_process_info('Пользовательских процессов:')
 for user, count in num_users_process.items():
