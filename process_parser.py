@@ -28,8 +28,8 @@ max_cpu = 0
 process_max_vsz = ''
 process_max_cpu = ''
 
-for i in range(1, len(lines)):
-    parts = lines[i].split()
+for line in lines[1:]:
+    parts = line.split()
     num_users_process[parts[0]] += 1
     vsz += int(parts[4])
     cpu += float(parts[2])
