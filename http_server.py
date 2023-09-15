@@ -21,7 +21,10 @@ def handle_client(connection, addr):
                 break
         req_method = client_data.split()[0]
         req_headers = client_data.split('\r\n')[1:-2]
-        req_status = int(client_data.split('status=')[1].split()[0])
+        try:
+            req_status = int(client_data.split('status=')[1].split()[0])
+        except IndexError:
+            req_status = 200
         try:
             status = HTTPStatus(req_status)
         except ValueError:
