@@ -24,15 +24,15 @@ else:
     raise ValueError(f"'{args.path}' is not a file or directory")
 
 results = []
+total_req_count = 0
 method_req_count = defaultdict(int)
 ip_req_count = defaultdict(int)
 all_requests = []
 
 for log_file in log_files:
     with open(log_file, 'r', encoding='UTF-8') as file:
-        lines = file.readlines()
-        total_req_count = len(lines)
-        for line in lines:
+        for line in file:
+            total_req_count += 1
             method = re.search(r'\b(GET|HEAD|POST|PUT|DELETE|CONNECT|OPTIONS|TRACE|PATCH)\b', line)[0]
             method_req_count[method] += 1
 
@@ -62,6 +62,7 @@ for log_file in log_files:
         }
 
         results.append(result)
+        total_req_count = 0
 
 print(json.dumps(results, indent=4))
 
